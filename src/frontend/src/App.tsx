@@ -2,6 +2,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { AnimatePresence, motion } from "motion/react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
+import MiniGamesPage from "./games/MiniGamesPage";
 
 // ─── CONSTANTS ──────────────────────────────────────────────────────────────
 
@@ -532,8 +533,13 @@ function StarField({ count = 90 }: { count?: number }) {
 
 function NavBar({
   onEnergyClick,
+  onArcadeClick,
   bobbyMode,
-}: { onEnergyClick: () => void; bobbyMode: boolean }) {
+}: {
+  onEnergyClick: () => void;
+  onArcadeClick: () => void;
+  bobbyMode: boolean;
+}) {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -656,6 +662,40 @@ function NavBar({
           </button>
         ))}
       </div>
+
+      {/* Arcade button */}
+      <button
+        type="button"
+        data-ocid="nav.arcade.button"
+        onClick={onArcadeClick}
+        style={{
+          padding: "8px 18px",
+          borderRadius: 999,
+          border: "1.5px solid rgba(53,230,213,0.7)",
+          background: "rgba(53,230,213,0.1)",
+          color: "#35E6D5",
+          fontSize: 13,
+          fontWeight: 700,
+          cursor: "pointer",
+          fontFamily: "Inter, sans-serif",
+          letterSpacing: "0.02em",
+          transition: "all 0.2s ease",
+          marginRight: 4,
+        }}
+        onMouseEnter={(e) => {
+          (e.currentTarget as HTMLButtonElement).style.background =
+            "rgba(53,230,213,0.22)";
+          (e.currentTarget as HTMLButtonElement).style.boxShadow =
+            "0 0 20px rgba(53,230,213,0.4)";
+        }}
+        onMouseLeave={(e) => {
+          (e.currentTarget as HTMLButtonElement).style.background =
+            "rgba(53,230,213,0.1)";
+          (e.currentTarget as HTMLButtonElement).style.boxShadow = "none";
+        }}
+      >
+        🕹️ Arcade
+      </button>
 
       {/* Energy button */}
       <button
@@ -2186,6 +2226,7 @@ function AppFooter() {
 export default function App() {
   const [bobbyMode, setBobbyMode] = useState(false);
   const [energy, setEnergy] = useState(45);
+  const [page, setPage] = useState<"main" | "games">("main");
 
   // Gentle energy oscillation
   useEffect(() => {
@@ -2228,6 +2269,12 @@ export default function App() {
     scrollToId("the-orb");
   }, []);
 
+  if (page === "games") {
+    return (
+      <MiniGamesPage onBack={() => setPage("main")} bobbyMode={bobbyMode} />
+    );
+  }
+
   return (
     <div className={bobbyMode ? "bobby-mode-active" : ""}>
       <Toaster
@@ -2263,7 +2310,11 @@ export default function App() {
         )}
       </AnimatePresence>
 
-      <NavBar onEnergyClick={handleEnergyNav} bobbyMode={bobbyMode} />
+      <NavBar
+        onEnergyClick={handleEnergyNav}
+        onArcadeClick={() => setPage("games")}
+        bobbyMode={bobbyMode}
+      />
 
       <main>
         <HeroSection

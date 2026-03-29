@@ -1,35 +1,28 @@
-# Bobby's High Noon Universe
+# Bobby's High Noon Universe — Mini Games Page
 
 ## Current State
-New project. No existing application files.
+App.tsx is a single-page experience (~2287 lines) with: Hero, Energy Meter, Constellation Map, Hall of Greatness, Compliment Generator, and Finale sections. NavBar has links to the sections. No real mini-games exist.
 
 ## Requested Changes (Diff)
 
 ### Add
-- Full single-page app: Bobby's High Noon Universe
-- Hero section with animated intro, floating cans, particles, glowing CTA
-- Bobby Energy Meter with animated gauge (4 levels: Mildly Bobby → Astral Noon Bobby)
-- Interactive High Noon Constellation Map — clickable floating cans that reveal Bobby Lore
-- Bobby Hall of Greatness — animated award cards gallery
-- Mini-game: tap to generate dramatic Bobby compliments
-- Finale section with confetti, rising cans, cinematic celebration
-- Golden-hour palette: sunset oranges, pool blues, silver, neon accents, crisp white
-- Glassmorphism panels, soft glow effects, parallax motion, floating objects
-- Funny microcopy throughout
+- `MiniGamesPage.tsx` — a full-page mini-games hub with a game selector and 3 playable games
+- `CanCatcher.tsx` — Game 1: Arcade can-catcher. Cans fall from the top, player moves a Bobby paddle left/right (mouse/touch) to catch High Noon cans. Different flavors worth different points, beer bombs to dodge. Speed increases over time. Lives system. High score stored in localStorage.
+- `CanStack.tsx` — Game 2: Precision stacking. A can slides back and forth at the top of the screen; click/tap to drop it. Stack must align with the platform below or it gets trimmed (Tetris-stack style). Tower grows upward. Combo scoring for perfect drops. High score stored in localStorage.
+- `NoonFrenzy.tsx` — Game 3: Whack-a-mole style. High Noon cans pop up from random holes on a grid. Click/tap them before they disappear. Timer-based (30 seconds). Harder waves with more holes activating at once. Bobby-themed flavor text on combos. High score stored in localStorage.
+- Nav link "Arcade" added to NavBar and mobile menu, linking to the games page (using a `page` state toggling between main and games)
 
 ### Modify
-- N/A
+- `App.tsx` — Add `page` state ('main' | 'games'). Conditionally render MiniGamesPage vs main content. Pass navigation handlers to NavBar and MiniGamesPage.
+- `NavBar` — Add "Arcade 🕹️" button that navigates to the games page
 
 ### Remove
-- N/A
+- Nothing removed
 
 ## Implementation Plan
-1. Build App.tsx as single scrollable page with 6 sections
-2. Hero: full-viewport animated section with floating CSS cans, particle shimmer, glowing CTA button that triggers Bobby Mode state
-3. Energy Meter: animated SVG/CSS gauge component with 4 Bobby levels, auto-animating needle
-4. Constellation Map: absolute-positioned can icons in a dark space-themed panel, click to reveal lore tooltips
-5. Hall of Greatness: grid of glass-morphism award cards with hover animations
-6. Compliment Generator: tap button → random compliment appears with dramatic animation
-7. Finale: full-viewport cinematic section, CSS confetti animation, rising cans, Honor Bobby Again button that scrolls back to top
-8. All animations via Tailwind + inline CSS keyframes + framer-motion if available, else CSS animations
-9. Responsive layout, golden-hour color tokens in index.css
+1. Create `src/frontend/src/games/CanCatcher.tsx` — canvas-based arcade game using requestAnimationFrame
+2. Create `src/frontend/src/games/CanStack.tsx` — canvas or DOM-based stacking game with requestAnimationFrame
+3. Create `src/frontend/src/games/NoonFrenzy.tsx` — React state-based whack-a-mole game
+4. Create `src/frontend/src/games/MiniGamesPage.tsx` — hub page with game cards, game selector, back button
+5. Modify `App.tsx` — add page state and wire up navigation
+6. Validate and fix any TypeScript/lint errors
